@@ -89,3 +89,22 @@ measured here. Nothing in these scripts answers that.
 ## Licence
 
 Apache-2.0.
+
+## Bound on the pydantic-ai row
+
+`pydantic_ai_absent_key_control.py` asks a different question: what happens when the
+decision is **never submitted**, so the tool call id is not a key in the map at all. That
+is what a host produces when a reviewer decides one of two parallel calls and resumes.
+
+```
+trial -- the decision was never submitted
+  approvals={}  (empty map)                    tool ran: False  output: raised UserError
+  approvals={other_id: True}  (partial)        tool ran: False  output: raised UserError
+```
+
+An absent key raises `UserError`. That path fails closed and is handled correctly, so the
+defect needs a host to write `None` as a **value**. Omitting the entry is safe; supplying
+the null is not.
+
+This bound is here because the row above would otherwise read as "unanswered approvals
+execute", which is wider than what was measured.

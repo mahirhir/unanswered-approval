@@ -4,6 +4,8 @@ Runnable reproductions of one defect class in three agent frameworks: **a value 
 neither an explicit yes nor an explicit no reaches the execute path of a human-approval
 gate.**
 
+![The measured table and two of the runs behind it: on None the guarded tool executes in all three frameworks, on an empty string it executes in openai-agents and google-adk, and a truthy 'no' is safe in all three](demo.gif)
+
 Every script here is offline. No API key, no network, no model call. Each one installs
 the framework from PyPI at a pinned version and drives that framework's own public API.
 None of them monkeypatch the library, because a demo that patches the library proves

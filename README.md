@@ -72,7 +72,37 @@ reproduced" result means the defect was fixed or the script drifted.
 
 - `pydantic/pydantic-ai` [#8060](https://github.com/pydantic/pydantic-ai/issues/8060)
 - `openai/openai-agents-python` [#4845](https://github.com/openai/openai-agents-python/issues/4845)
+  — **closed as WONTFIX on 2026-09-05**, along with the four pull requests that
+  implemented a fix. See the ruling below.
 - `google/adk-python` [#7010](https://github.com/google/adk-python/issues/7010)
+
+## What the openai-agents maintainer ruled
+
+On 2026-09-05 an OpenAI maintainer closed #4845 and all four pull requests against it,
+unmerged, with this reasoning:
+
+> The examples return values outside the declared boolean callback contract. They
+> establish the current truthiness behavior, but do not establish an SDK-owned untyped
+> input boundary or a bypass with a supported callback result. Please keep approval
+> decisions explicitly boolean in application code.
+
+That position is defensible and I am not arguing with it. `needs_approval` is declared
+`bool | Callable[..., bool]`, so a string or a null is the caller breaking the contract,
+and whether a typed SDK should validate untyped input at that boundary is a design call
+that belongs to its maintainers.
+
+So read the `openai-agents` row as what it is: **a measurement of what the released
+version does with an out-of-contract value, not a defect its maintainer accepts.** The
+same caution applies to the other two rows until each project rules on its own.
+
+The reopening bar he named is a concrete bypass using a *supported* callback result. I
+have not found one. If I do, that is when this comes back.
+
+What does not change is the reason a host hits this at all: approvals arrive from config
+files, JSON payloads and database columns, where the type is not enforced by anything.
+Whether that is the framework's problem or the application's is exactly the question the
+ruling above answers, and it answers it in favour of the application. That makes the
+application the thing worth auditing.
 
 ## What this does not claim
 
